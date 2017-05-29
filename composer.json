@@ -1,0 +1,21 @@
+{
+  "config": {
+    "vendor-dir": "src/vendor"
+  },
+
+  "autoload": {
+    "psr-4": {
+      "BS\\": "src/"
+    }
+  },
+
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+
+  "require-dev": {
+    "phpunit/phpunit": "6.1"
+  }
+}
