@@ -16,6 +16,9 @@ use BS\Number\Type\BaroNumber;
 use BS\Number\Type\BaroSelloNumber;
 use BS\Number\Type\SelloNumber;
 use BS\Output\Console\Color\ConsoleColor;
+use BS\Output\Console\Console;
+use BS\Output\File\File;
+use BS\Output\File\FileAdapter;
 
 /**
  * Class Receiver
@@ -23,6 +26,13 @@ use BS\Output\Console\Color\ConsoleColor;
  */
 class Receiver
 {
+    private $output;
+
+    public function __construct()
+    {
+        $this->output = new Console();
+
+    }
 
     /**
      * Codice per eseguire lo step 1
@@ -31,7 +41,7 @@ class Receiver
     {
         $list = NumberList::create(100, new ResolveNumberStep1Strategy());
 
-        echo NumberList::stringify($list);
+        $this->output->log(NumberList::stringify($list));
     }
 
     /**
@@ -41,7 +51,7 @@ class Receiver
     {
         $list = NumberList::create(100, new ResolveNumberStep2Strategy());
 
-        echo NumberList::stringify($list);
+        $this->output->log(NumberList::stringify($list));
     }
 
     /**
@@ -52,7 +62,7 @@ class Receiver
         $colorizeStrategy = new ColorizeNumberStep3Strategy(new ConsoleColor());
         $list = NumberList::create(100, new ResolveNumberStep2Strategy(), $colorizeStrategy);
 
-        echo NumberList::stringify($list);
+        $this->output->log(NumberList::stringify($list));
     }
 
     /**
@@ -63,7 +73,7 @@ class Receiver
         $list = NumberList::create(100, new ResolveNumberStep2Strategy());
         $listFiltered = $list->filterByValOut(BaroSelloNumber::VAL_OUT);
 
-        echo NumberList::stringify($listFiltered);
+        $this->output->log(NumberList::stringify($listFiltered));
     }
 
     /**
@@ -75,10 +85,12 @@ class Receiver
         $listForConsole = $list->filterByValOut(BaroSelloNumber::VAL_OUT, SelloNumber::VAL_OUT);
         $listForFile = $list->filterByValOut(BaroNumber::VAL_OUT, SelloNumber::VAL_OUT);
 
-        echo "\nStampo a console solo i BaroSello e i Sello\n";
-        echo NumberList::stringify($listForConsole);
+        $this->output->log("\nStampo a console solo i BaroSello e i Sello\n");
+        $this->output->log(NumberList::stringify($listForConsole));
 
-        echo "\n\nI Baro e i Sello sono salvati nel file baro_e_sello.txt\n";
-        file_put_contents("baro_e_sello.txt", NumberList::stringify($listForFile));
+        $this->output->log("\n\nI Baro e i Sello sono salvati nel file baro_e_sello.txt\n");
+
+        $file = new FileAdapter(new File("baro_e_sello.txt"));
+        $file->log(NumberList::stringify($listForFile));
     }
 }
